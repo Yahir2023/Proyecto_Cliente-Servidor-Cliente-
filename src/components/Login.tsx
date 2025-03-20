@@ -34,7 +34,7 @@ function Login() {
         navigate("/Usuarios");
       }
     } catch (err: any) {
-      setError(err.response?.data?.mensaje || "Error al iniciar sesión");
+      setError(err.response?.data?.mensaje || "Errores al iniciar sesión");
     }
   };
 
