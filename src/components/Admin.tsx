@@ -60,7 +60,7 @@ function Administradores() {
     fetchAdministradores();
   }, [token]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setNuevoAdmin(prev => ({ ...prev, [name]: value }));
   };
@@ -183,7 +183,17 @@ function Administradores() {
         </div>
         <div className="mb-3">
           <label>Rol</label>
-          <input type="text" className="form-control" name="rol" value={nuevoAdmin.rol} onChange={handleChange} />
+          <select 
+            className="form-control" 
+            name="rol" 
+            value={nuevoAdmin.rol} 
+            onChange={handleChange}
+          >
+            <option value="">Selecciona un rol</option>
+            <option value="Gerente">Gerente</option>
+            <option value="Supervisor">Supervisor</option>
+            <option value="Cajero">	Cajero</option>
+          </select>
         </div>
         <button type="submit" className="btn btn-primary">
           {nuevoAdmin.id_admin ? 'Actualizar' : 'Agregar'}
