@@ -1,6 +1,7 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Sidebar from "./sidebar";
 
 interface Usuario {
   id_usuario: number;
@@ -117,6 +118,9 @@ function Usuarios() {
 
   return (
     <div className="container mt-4">
+      {/* Sidebar */}
+      <Sidebar />
+
       <h1>Usuarios</h1>
       <table className="table table-striped">
         <thead>

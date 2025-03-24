@@ -1,0 +1,37 @@
+.sidebar {
+    width: 250px; /* Ajusta el ancho */
+    height: 100vh;
+    background-color: #343a40; /* Color oscuro */
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+  }
+  
+  .sidebar-title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .sidebar-nav {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar-nav li {
+    margin: 4px 0;
+  }
+  
+  .sidebar-nav a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .sidebar-nav a:hover {
+    background-color: #495057; /* Color al pasar el mouse */
+  }
+  

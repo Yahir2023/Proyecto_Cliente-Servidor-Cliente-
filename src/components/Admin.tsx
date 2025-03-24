@@ -3,6 +3,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Sidebar from "./sidebar";
 
 interface Administrador {
   id_admin: number;
@@ -127,78 +128,84 @@ function Administradores() {
   };
 
   return (
-    <div className="container mt-4">
-      <ToastContainer /> {/* Asegura que las notificaciones se muestren */}
-      
-      <h1>Administradores</h1>
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Correo</th>
-            <th>Rol</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {administradores.map(admin => (
-            <tr key={admin.id_admin}>
-              <td>{admin.id_admin}</td>
-              <td>{admin.nombre}</td>
-              <td>{admin.apellido}</td>
-              <td>{admin.correo}</td>
-              <td>{admin.rol}</td>
-              <td>
-                <button className="btn btn-warning" onClick={() => handleEdit(admin)}>
-                  Editar
-                </button>
-                <button className="btn btn-danger ml-2" onClick={() => handleDelete(admin.id_admin)}>
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="d-flex">
+      {/* Sidebar */}
+      <Sidebar />
 
-      <h2>{nuevoAdmin.id_admin ? 'Editar Administrador' : 'Agregar Nuevo Administrador'}</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label>Nombre</label>
-          <input type="text" className="form-control" name="nombre" value={nuevoAdmin.nombre} onChange={handleChange} />
-        </div>
-        <div className="mb-3">
-          <label>Apellido</label>
-          <input type="text" className="form-control" name="apellido" value={nuevoAdmin.apellido} onChange={handleChange} />
-        </div>
-        <div className="mb-3">
-          <label>Correo</label>
-          <input type="email" className="form-control" name="correo" value={nuevoAdmin.correo} onChange={handleChange} />
-        </div>
-        <div className="mb-3">
-          <label>Contraseña</label>
-          <input type="password" className="form-control" name="contraseña" value={nuevoAdmin.contraseña} onChange={handleChange} />
-        </div>
-        <div className="mb-3">
-          <label>Rol</label>
-          <select 
-            className="form-control" 
-            name="rol" 
-            value={nuevoAdmin.rol} 
-            onChange={handleChange}
-          >
-            <option value="">Selecciona un rol</option>
-            <option value="Gerente">Gerente</option>
-            <option value="Supervisor">Supervisor</option>
-            <option value="Cajero">	Cajero</option>
-          </select>
-        </div>
-        <button type="submit" className="btn btn-primary">
-          {nuevoAdmin.id_admin ? 'Actualizar' : 'Agregar'}
-        </button>
-      </form>
+      {/* Contenido principal */}
+      <div className="container mt-4 flex-grow-1">
+        <ToastContainer /> {/* Asegura que las notificaciones se muestren */}
+
+        <h1>Administradores</h1>
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Correo</th>
+              <th>Rol</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {administradores.map(admin => (
+              <tr key={admin.id_admin}>
+                <td>{admin.id_admin}</td>
+                <td>{admin.nombre}</td>
+                <td>{admin.apellido}</td>
+                <td>{admin.correo}</td>
+                <td>{admin.rol}</td>
+                <td>
+                  <button className="btn btn-warning" onClick={() => handleEdit(admin)}>
+                    Editar
+                  </button>
+                  <button className="btn btn-danger ml-2" onClick={() => handleDelete(admin.id_admin)}>
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <h2>{nuevoAdmin.id_admin ? 'Editar Administrador' : 'Agregar Nuevo Administrador'}</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-3">
+            <label>Nombre</label>
+            <input type="text" className="form-control" name="nombre" value={nuevoAdmin.nombre} onChange={handleChange} />
+          </div>
+          <div className="mb-3">
+            <label>Apellido</label>
+            <input type="text" className="form-control" name="apellido" value={nuevoAdmin.apellido} onChange={handleChange} />
+          </div>
+          <div className="mb-3">
+            <label>Correo</label>
+            <input type="email" className="form-control" name="correo" value={nuevoAdmin.correo} onChange={handleChange} />
+          </div>
+          <div className="mb-3">
+            <label>Contraseña</label>
+            <input type="password" className="form-control" name="contraseña" value={nuevoAdmin.contraseña} onChange={handleChange} />
+          </div>
+          <div className="mb-3">
+            <label>Rol</label>
+            <select 
+              className="form-control" 
+              name="rol" 
+              value={nuevoAdmin.rol} 
+              onChange={handleChange}
+            >
+              <option value="">Selecciona un rol</option>
+              <option value="Gerente">Gerente</option>
+              <option value="Supervisor">Supervisor</option>
+              <option value="Cajero">Cajero</option>
+            </select>
+          </div>
+          <button type="submit" className="btn btn-primary">
+            {nuevoAdmin.id_admin ? 'Actualizar' : 'Agregar'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

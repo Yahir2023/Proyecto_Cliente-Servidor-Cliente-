@@ -5,6 +5,8 @@ import Peliculas from "./components/Peliculas"
 import Admin from "./components/Admin"
 import Usuarios from "./components/Usuarios"
 import Login from "./components/Login"
+import Sidebar from "./components/sidebar"
+import DashboardA from "./components/Dashboard(admin)"
 
 function Router(){
     return(
@@ -13,9 +15,11 @@ function Router(){
                 <Route path="/" element={<App/>} index/>
                 <Route path="/Login" element={<Login/>}></Route>
                 <Route path="/dashboard" element={<Dashboard/>}/>
+                <Route path="/dashboard(admin)" element={<DashboardA/>}></Route>
                 <Route path="/peliculas" element={<Peliculas/>}/>
                 <Route path="/Admin" element={<Admin/>}></Route>
                 <Route path="/Usuarios" element={<Usuarios/>}></Route>
+                <Route path="/Sidebar" element={<Sidebar/>}></Route>
             </Routes>
         </BrowserRouter>
     ) 
