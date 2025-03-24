@@ -2,6 +2,8 @@ import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Sidebar from "./sidebar";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Usuario {
   id_usuario: number;
@@ -30,8 +32,8 @@ function Usuarios() {
 
   // Verificar que se tenga un token en el localStorage
   const storedToken = localStorage.getItem('token');
-  console.log("Token en localStorage:", storedToken);
   if (!storedToken) {
+    toast.warn("No estás autenticado. Inicia sesión para continuar.");
     return (
       <div className="container mt-4">
         <h2>No estás autenticado</h2>
@@ -43,24 +45,19 @@ function Usuarios() {
   // Si el token no viene con el prefijo "Bearer ", lo agregamos
   const token = storedToken.startsWith("Bearer ") ? storedToken : `Bearer ${storedToken}`;
 
-  // Función para obtener usuarios (requiere que el token pertenezca a un administrador)
+  // Función para obtener usuarios
   const fetchUsuarios = () => {
-    axios
-      .get('http://localhost:3000/usuarios', {
-        headers: { Authorization: token },
+    axios.get('http://localhost:3000/usuarios', { headers: { Authorization: token } })
+      .then(response => {
+        setUsuarios(response.data);
       })
-      .then(response => setUsuarios(response.data))
       .catch(error => {
-        console.error('Error al obtener usuarios:', error);
-        if (error.response && error.response.status === 401) {
-          console.error("Token enviado:", token);
-        }
+        console.error("Error al obtener usuarios:", error);
       });
   };
 
   useEffect(() => {
     fetchUsuarios();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -71,29 +68,31 @@ function Usuarios() {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Convertir id_usuario a número (en caso de edición)
     const usuarioAInsertar = { ...nuevoUsuario, id_usuario: parseInt(nuevoUsuario.id_usuario) || undefined };
     const existeUsuario = usuarios.find(u => u.id_usuario === usuarioAInsertar.id_usuario);
 
     if (existeUsuario) {
-      // Si existe, actualizar mediante PUT
-      axios
-        .put(`http://localhost:3000/usuarios/${usuarioAInsertar.id_usuario}`, usuarioAInsertar, {
-          headers: { Authorization: token },
+      axios.put(`http://localhost:3000/usuarios/${usuarioAInsertar.id_usuario}`, usuarioAInsertar, { headers: { Authorization: token } })
+        .then(() => {
+          fetchUsuarios();
+          toast.success("Usuario actualizado correctamente.");
         })
-        .then(() => fetchUsuarios())
-        .catch(error => console.error('Error al actualizar usuario:', error));
+        .catch(error => {
+          toast.error("Error al actualizar usuario.");
+          console.error("Error al actualizar usuario:", error);
+        });
     } else {
-      // Sino, agregar mediante POST
-      axios
-        .post('http://localhost:3000/usuarios', usuarioAInsertar, {
-          headers: { Authorization: token },
+      axios.post('http://localhost:3000/usuarios', usuarioAInsertar, { headers: { Authorization: token } })
+        .then(() => {
+          fetchUsuarios();
+          toast.success("Usuario agregado correctamente.");
         })
-        .then(() => fetchUsuarios())
-        .catch(error => console.error('Error al agregar usuario:', error));
+        .catch(error => {
+          toast.error("Error al agregar usuario.");
+          console.error("Error al agregar usuario:", error);
+        });
     }
 
-    // Limpiar formulario
     setNuevoUsuario({ id_usuario: '', nombre: '', apellido: '', correo: '', contraseña: '' });
   };
 
@@ -108,18 +107,24 @@ function Usuarios() {
   };
 
   const handleDelete = (id: number) => {
-    axios
-      .delete(`http://localhost:3000/usuarios/${id}`, {
-        headers: { Authorization: token },
+    axios.delete(`http://localhost:3000/usuarios/${id}`, { headers: { Authorization: token } })
+      .then(() => {
+        fetchUsuarios();
+        toast.success("Usuario eliminado correctamente.");
       })
-      .then(() => fetchUsuarios())
-      .catch(error => console.error('Error al eliminar usuario:', error));
+      .catch(error => {
+        toast.error("Error al eliminar usuario.");
+        console.error("Error al eliminar usuario:", error);
+      });
   };
 
   return (
     <div className="container mt-4">
       {/* Sidebar */}
       <Sidebar />
+
+      {/* Toast Notifications */}
+      <ToastContainer />
 
       <h1>Usuarios</h1>
       <table className="table table-striped">
@@ -140,12 +145,8 @@ function Usuarios() {
               <td>{usuario.apellido}</td>
               <td>{usuario.correo}</td>
               <td>
-                <button className="btn btn-warning" onClick={() => handleEdit(usuario)}>
-                  Editar
-                </button>
-                <button className="btn btn-danger ml-2" onClick={() => handleDelete(usuario.id_usuario)}>
-                  Eliminar
-                </button>
+                <button className="btn btn-warning" onClick={() => handleEdit(usuario)}>Editar</button>
+                <button className="btn btn-danger ml-2" onClick={() => handleDelete(usuario.id_usuario)}>Eliminar</button>
               </td>
             </tr>
           ))}
