@@ -5,7 +5,7 @@ import Peliculas from "./components/Peliculas"
 import Admin from "./components/Admin"
 import Usuarios from "./components/Usuarios"
 import Login from "./components/Login"
-import Sidebar from "./components/sidebar"
+import Sidebar from "./components/Sidebar"
 import DashboardA from "./components/Dashboard(admin)"
 
 function Router(){
