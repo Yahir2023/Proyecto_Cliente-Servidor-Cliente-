@@ -137,38 +137,6 @@ function Administradores() {
         <ToastContainer /> {/* Asegura que las notificaciones se muestren */}
 
         <h1>Administradores</h1>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Correo</th>
-              <th>Rol</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {administradores.map(admin => (
-              <tr key={admin.id_admin}>
-                <td>{admin.id_admin}</td>
-                <td>{admin.nombre}</td>
-                <td>{admin.apellido}</td>
-                <td>{admin.correo}</td>
-                <td>{admin.rol}</td>
-                <td>
-                  <button className="btn btn-warning" onClick={() => handleEdit(admin)}>
-                    Editar
-                  </button>
-                  <button className="btn btn-danger ml-2" onClick={() => handleDelete(admin.id_admin)}>
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
         <h2>{nuevoAdmin.id_admin ? 'Editar Administrador' : 'Agregar Nuevo Administrador'}</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
@@ -205,6 +173,38 @@ function Administradores() {
             {nuevoAdmin.id_admin ? 'Actualizar' : 'Agregar'}
           </button>
         </form>
+
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Correo</th>
+              <th>Rol</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {administradores.map(admin => (
+              <tr key={admin.id_admin}>
+                <td>{admin.id_admin}</td>
+                <td>{admin.nombre}</td>
+                <td>{admin.apellido}</td>
+                <td>{admin.correo}</td>
+                <td>{admin.rol}</td>
+                <td>
+                  <button className="btn btn-warning" onClick={() => handleEdit(admin)}>
+                    Editar
+                  </button>
+                  <button className="btn btn-danger ml-2" onClick={() => handleDelete(admin.id_admin)}>
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

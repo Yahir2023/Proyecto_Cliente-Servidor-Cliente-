@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
+import { useNavigate, Link } from "react-router-dom";
+import {jwtDecode} from "jwt-decode";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function Login() {
@@ -75,6 +75,14 @@ function Login() {
           {/* Mensaje de error */}
           {error && <div className="alert alert-danger mt-3">{error}</div>}
         </form>
+
+        {/* Sección para crear una cuenta */}
+        <div className="text-center mt-4">
+          <p>¿No tienes cuenta?</p>
+          <Link to="/Registro" className="btn btn-secondary">
+            Crear Cuenta
+          </Link>
+        </div>
       </div>
     </div>
   );
