@@ -1,10 +1,9 @@
-import Navbar from "./Navbar"; // Ajusta la ruta si es necesario
+import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-function Dashboard() {
+const inicio = () => {
   return (
-    <>
-      <Navbar />
-      <div className="container my-4">
+    <div className="container my-4">
       <div className="row g-3 mb-4">
         <div className="col-md-4">
           <img
@@ -122,8 +121,7 @@ function Dashboard() {
         </div>
       </div>
     </div>
-    </>
   );
-}
+};
 
-export default Dashboard;
+export default inicio;

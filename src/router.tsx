@@ -8,6 +8,8 @@ import Login from "./components/Login"
 import Sidebar from "./components/Sidebar"
 import DashboardA from "./components/Dashboard(admin)"
 import Registro from "./components/Registro"
+import Navbar from "./components/Navbar"
+import Perfil from "./components/Perfil"
 
 function Router(){
     return(
@@ -22,6 +24,8 @@ function Router(){
                 <Route path="/Usuarios" element={<Usuarios/>}></Route>
                 <Route path="/Sidebar" element={<Sidebar/>}></Route>
                 <Route path="/Registro" element={<Registro/>}></Route>
+                <Route path="/Navbar" element={<Navbar/>}></Route>
+                <Route path="/Perfil" element={<Perfil/>}></Route>
             </Routes>
         </BrowserRouter>
     ) 

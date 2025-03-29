@@ -31,8 +31,7 @@ function Login() {
 
       alert("Inicio de sesión exitoso");
 
-      // Redirigir según el rol
-      decoded.isAdmin ? navigate("/Dashboard(admin)") : navigate("/Usuarios");
+      decoded.isAdmin ? navigate("/Dashboard(admin)") : navigate("/Dashboard");
     } catch (err: any) {
       setError(err.response?.data?.mensaje || "Error al iniciar sesión");
     }
