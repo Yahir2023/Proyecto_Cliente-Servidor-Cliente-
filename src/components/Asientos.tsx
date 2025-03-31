@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "./Sidebar";
-// HOLA mundo
+// HOLA mundo hello
 // Definir la estructura de datos de un asiento
 interface Asiento {
   id_asiento: number;
