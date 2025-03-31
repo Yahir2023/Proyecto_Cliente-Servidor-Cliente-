@@ -10,23 +10,18 @@ function Navbar() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Verifica si hay token en localStorage
     const token = localStorage.getItem("token");
     if (token) {
-      // Consumir endpoint para obtener el perfil
       axios
         .get("http://localhost:3000/auth/perfil", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
-          // Se espera que la respuesta tenga { usuario: { nombre, ... } }
           setNombreUsuario(response.data.usuario.nombre);
         })
         .catch((error) => {
           console.error("Error al cargar perfil:", error);
           toast.error("Error al cargar perfil.");
-          // En caso de error podrías eliminar el token o redirigir al login
-          // localStorage.removeItem("token");
         });
     } else {
       setNombreUsuario(null);
@@ -37,7 +32,7 @@ function Navbar() {
     localStorage.removeItem("token");
     setNombreUsuario(null);
     toast.info("Sesión cerrada correctamente.");
-    navigate("/Dashboard"); // Regresa al dashboard o a la página pública
+    navigate("/");
   };
 
   const handleLogin = () => {
@@ -47,11 +42,10 @@ function Navbar() {
   return (
     <>
       <ToastContainer />
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div className="container">
-          {/* Enlace público: puede llevar a la página de películas o dashboard público */}
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div className="container-fluid">
           <Link className="navbar-brand" to="/">
-            CineApp
+            CINE-LIVE
           </Link>
           <button
             className="navbar-toggler"
@@ -62,18 +56,15 @@ function Navbar() {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarContent">
-            {/* Enlaces públicos que todos pueden ver */}
             <ul className="navbar-nav me-auto">
               <li className="nav-item">
                 <Link className="nav-link" to="/peliculas">
                   Películas
                 </Link>
               </li>
-              {/* Otros enlaces públicos */}
             </ul>
             <ul className="navbar-nav ms-auto">
               {nombreUsuario ? (
-                // Usuario autenticado: muestra dropdown con su nombre
                 <li className="nav-item dropdown">
                   <a
                     className="nav-link dropdown-toggle"
@@ -110,12 +101,8 @@ function Navbar() {
                   </ul>
                 </li>
               ) : (
-                // Usuario no autenticado: muestra botón para iniciar sesión
                 <li className="nav-item">
-                  <button
-                    className="btn btn-link nav-link"
-                    onClick={handleLogin}
-                  >
+                  <button className="btn btn-link nav-link" onClick={handleLogin}>
                     Iniciar sesión
                   </button>
                 </li>

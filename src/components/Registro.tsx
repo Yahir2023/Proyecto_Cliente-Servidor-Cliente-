@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function Registro() {
@@ -10,7 +10,6 @@ function Registro() {
   const [contraseña, setContraseña] = useState("");
   const [error, setError] = useState("");
   const [mensaje, setMensaje] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

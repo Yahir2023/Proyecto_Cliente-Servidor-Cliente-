@@ -31,18 +31,17 @@ function Login() {
 
       alert("Inicio de sesión exitoso");
 
-      decoded.isAdmin ? navigate("/Dashboard(admin)") : navigate("/Dashboard");
+      decoded.isAdmin ? navigate("/Dashboard(admin)") : navigate("/");
     } catch (err: any) {
       setError(err.response?.data?.mensaje || "Error al iniciar sesión");
     }
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center vh-100">
+    <div className=".login-container d-flex justify-content-center align-items-center min-vh-100">
       <div className="card shadow-lg p-4" style={{ maxWidth: "400px", width: "100%" }}>
         <h2 className="text-center mb-4">Iniciar Sesión</h2>
         <form onSubmit={handleSubmit}>
-          {/* Email */}
           <div className="mb-3">
             <label className="form-label">Correo Electrónico</label>
             <input

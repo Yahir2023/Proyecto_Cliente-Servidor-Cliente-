@@ -1,5 +1,4 @@
 import { BrowserRouter,Routes,Route } from "react-router-dom"
-import App from "./App"
 import Dashboard from "./components/Dashboard"
 import Peliculas from "./components/Peliculas"
 import Admin from "./components/Admin"
@@ -15,9 +14,9 @@ function Router(){
     return(
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<App/>} index/>
+                {/*<Route path="/" element={<App/>} index/>*/} 
                 <Route path="/Login" element={<Login/>}></Route>
-                <Route path="/dashboard" element={<Dashboard/>}/>
+                <Route path="/" element={<Dashboard/>}/>
                 <Route path="/dashboard(admin)" element={<DashboardA/>}></Route>
                 <Route path="/peliculas" element={<Peliculas/>}/>
                 <Route path="/Admin" element={<Admin/>}></Route>

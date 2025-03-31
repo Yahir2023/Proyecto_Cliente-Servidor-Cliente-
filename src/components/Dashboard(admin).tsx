@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";   
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "./Sidebar";
@@ -29,20 +29,24 @@ function DashboardA() {
       });
   }, []);
 
+  const handleCerrarSesion = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
-    <div style={{ display: "flex" }}>
+    <div className="main-content">
       <Sidebar />
-      <div style={{ marginLeft: "250px", padding: "20px", width: "100%" }}>
+      <div className="ml-250 p-4" style={{ width: "100%" }}>
         <h1>
           Bienvenido al Dashboard {usuario?.nombre}{" "}
           {usuario?.rol && <span>({usuario.rol})</span>}
         </h1>
-        {/* Botón de Bootstrap para salir */}
         <button 
           className="btn btn-primary mt-3"
-          onClick={() => navigate("/Dashboard")}
+          onClick={handleCerrarSesion}
         >
-          Salir
+          Cerrar sesión
         </button>
       </div>
     </div>

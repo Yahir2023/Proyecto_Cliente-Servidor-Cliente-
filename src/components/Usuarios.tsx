@@ -1,7 +1,7 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Sidebar from "./Sidebar";
+import Sidebar from './Sidebar';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -20,9 +20,9 @@ interface UsuarioForm {
   contraseña: string;
 }
 
-function Usuarios() {
+function AdminUsuarios() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
-  const [nuevoUsuario, setNuevoUsuario] = useState<UsuarioForm>({
+  const [form, setForm] = useState<UsuarioForm>({
     id_usuario: '',
     nombre: '',
     apellido: '',
@@ -30,10 +30,9 @@ function Usuarios() {
     contraseña: '',
   });
 
-  // Verificar que se tenga un token en el localStorage
+  // Verificar token almacenado en localStorage
   const storedToken = localStorage.getItem('token');
   if (!storedToken) {
-    toast.warn("No estás autenticado. Inicia sesión para continuar.");
     return (
       <div className="container mt-4">
         <h2>No estás autenticado</h2>
@@ -41,63 +40,74 @@ function Usuarios() {
       </div>
     );
   }
-
-  // Si el token no viene con el prefijo "Bearer ", lo agregamos
+  // Si no viene con "Bearer ", se agrega
   const token = storedToken.startsWith("Bearer ") ? storedToken : `Bearer ${storedToken}`;
 
-  // Función para obtener usuarios
+  // Obtener la lista de usuarios (solo admin podrá verlos)
   const fetchUsuarios = () => {
-    axios.get('http://localhost:3000/usuarios', { headers: { Authorization: token } })
-      .then(response => {
-        setUsuarios(response.data);
+    axios
+      .get('http://localhost:3000/usuarios', {
+        headers: { Authorization: token },
       })
+      .then(response => setUsuarios(response.data))
       .catch(error => {
-        console.error("Error al obtener usuarios:", error);
+        console.error('Error al obtener usuarios:', error.response?.data || error);
+        toast.error("Error al obtener usuarios");
       });
   };
 
   useEffect(() => {
     fetchUsuarios();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setNuevoUsuario(prev => ({ ...prev, [name]: value }));
+    setForm(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const usuarioAInsertar = { ...nuevoUsuario, id_usuario: parseInt(nuevoUsuario.id_usuario) || undefined };
-    const existeUsuario = usuarios.find(u => u.id_usuario === usuarioAInsertar.id_usuario);
+    // Convertir id_usuario a número para detectar si se trata de una edición
+    const usuarioAEnviar = { ...form, id_usuario: parseInt(form.id_usuario) || undefined };
+    const existe = usuarios.find(u => u.id_usuario === usuarioAEnviar.id_usuario);
 
-    if (existeUsuario) {
-      axios.put(`http://localhost:3000/usuarios/${usuarioAInsertar.id_usuario}`, usuarioAInsertar, { headers: { Authorization: token } })
+    if (existe) {
+      // Actualizar usuario
+      axios
+        .put(`http://localhost:3000/usuarios/${usuarioAEnviar.id_usuario}`, usuarioAEnviar, {
+          headers: { Authorization: token },
+        })
         .then(() => {
+          toast.success("Usuario actualizado correctamente");
           fetchUsuarios();
-          toast.success("Usuario actualizado correctamente.");
+          setForm({ id_usuario: '', nombre: '', apellido: '', correo: '', contraseña: '' });
         })
         .catch(error => {
-          toast.error("Error al actualizar usuario.");
-          console.error("Error al actualizar usuario:", error);
+          console.error('Error al actualizar usuario:', error.response?.data || error);
+          toast.error("Error al actualizar usuario");
         });
     } else {
-      axios.post('http://localhost:3000/usuarios', usuarioAInsertar, { headers: { Authorization: token } })
+      // Agregar usuario
+      axios
+        .post('http://localhost:3000/usuarios', usuarioAEnviar, {
+          headers: { Authorization: token },
+        })
         .then(() => {
+          toast.success("Usuario agregado correctamente");
           fetchUsuarios();
-          toast.success("Usuario agregado correctamente.");
+          setForm({ id_usuario: '', nombre: '', apellido: '', correo: '', contraseña: '' });
         })
         .catch(error => {
-          toast.error("Error al agregar usuario.");
-          console.error("Error al agregar usuario:", error);
+          console.error('Error al agregar usuario:', error.response?.data || error);
+          toast.error("Error al agregar usuario");
         });
     }
-
-    setNuevoUsuario({ id_usuario: '', nombre: '', apellido: '', correo: '', contraseña: '' });
   };
 
   const handleEdit = (usuario: Usuario) => {
-    setNuevoUsuario({
+    setForm({
       id_usuario: usuario.id_usuario.toString(),
       nombre: usuario.nombre,
       apellido: usuario.apellido,
@@ -107,48 +117,49 @@ function Usuarios() {
   };
 
   const handleDelete = (id: number) => {
-    axios.delete(`http://localhost:3000/usuarios/${id}`, { headers: { Authorization: token } })
+    axios
+      .delete(`http://localhost:3000/usuarios/${id}`, {
+        headers: { Authorization: token },
+      })
       .then(() => {
+        toast.success("Usuario eliminado correctamente");
         fetchUsuarios();
-        toast.success("Usuario eliminado correctamente.");
       })
       .catch(error => {
-        toast.error("Error al eliminar usuario.");
-        console.error("Error al eliminar usuario:", error);
+        console.error('Error al eliminar usuario:', error.response?.data || error);
+        toast.error("Error al eliminar usuario");
       });
   };
 
   return (
-    <div className="container mt-4">
-      {/* Sidebar */}
+    <div className="main-content mt-4">
       <Sidebar />
-
-      {/* Toast Notifications */}
       <ToastContainer />
-
-      <h1>Usuarios</h1>
-      <h2>{nuevoUsuario.id_usuario ? 'Editar Usuario' : 'Agregar Nuevo Usuario'}</h2>
+      <h2>{form.id_usuario ? 'Editar Usuario' : 'Agregar Nuevo Usuario'}</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label>Nombre</label>
-          <input type="text" className="form-control" name="nombre" value={nuevoUsuario.nombre} onChange={handleChange} />
+          <input type="text" className="form-control" name="nombre" value={form.nombre} onChange={handleChange} />
         </div>
         <div className="mb-3">
           <label>Apellido</label>
-          <input type="text" className="form-control" name="apellido" value={nuevoUsuario.apellido} onChange={handleChange} />
+          <input type="text" className="form-control" name="apellido" value={form.apellido} onChange={handleChange} />
         </div>
         <div className="mb-3">
           <label>Correo</label>
-          <input type="email" className="form-control" name="correo" value={nuevoUsuario.correo} onChange={handleChange} />
+          <input type="email" className="form-control" name="correo" value={form.correo} onChange={handleChange} />
         </div>
         <div className="mb-3">
           <label>Contraseña</label>
-          <input type="password" className="form-control" name="contraseña" value={nuevoUsuario.contraseña} onChange={handleChange} />
+          <input type="password" className="form-control" name="contraseña" value={form.contraseña} onChange={handleChange} />
         </div>
         <button type="submit" className="btn btn-primary">
-          {nuevoUsuario.id_usuario ? 'Actualizar' : 'Agregar'}
+          {form.id_usuario ? 'Actualizar' : 'Agregar'}
         </button>
-        <table className="table table-striped">
+      </form>
+
+      <h1>Administración de Usuarios</h1>
+      <table className="table table-striped">
         <thead>
           <tr>
             <th>ID</th>
@@ -166,16 +177,19 @@ function Usuarios() {
               <td>{usuario.apellido}</td>
               <td>{usuario.correo}</td>
               <td>
-                <button className="btn btn-warning" onClick={() => handleEdit(usuario)}>Editar</button>
-                <button className="btn btn-danger ml-2" onClick={() => handleDelete(usuario.id_usuario)}>Eliminar</button>
+                <button className="btn btn-warning" onClick={() => handleEdit(usuario)}>
+                  Editar
+                </button>
+                <button className="btn btn-danger ml-2" onClick={() => handleDelete(usuario.id_usuario)}>
+                  Eliminar
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      </form>
     </div>
   );
 }
 
-export default Usuarios;
+export default AdminUsuarios;

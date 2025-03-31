@@ -128,10 +128,8 @@ function Administradores() {
   };
 
   return (
-    <div className="d-flex">
-      {/* Sidebar */}
+    <div className="main-content d-flex">
       <Sidebar />
-
       {/* Contenido principal */}
       <div className="container mt-4 flex-grow-1">
         <ToastContainer /> {/* Asegura que las notificaciones se muestren */}
