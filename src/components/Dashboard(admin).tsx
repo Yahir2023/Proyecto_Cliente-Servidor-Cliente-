@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"; 
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Sidebar from "./Sidebar";
 
 function DashboardA() {
-  const [usuario, setUsuario] = useState<{ nombre?: string } | null>(null);
+  // Se amplía la definición del objeto usuario para incluir el rol.
+  const [usuario, setUsuario] = useState<{ nombre?: string; rol?: string } | null>(null);
   const navigate = useNavigate(); // Para redireccionar
 
   useEffect(() => {
@@ -16,6 +17,7 @@ function DashboardA() {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
+        // Se comprueba que exista el usuario y que contenga el campo nombre y rol
         if (response.data.usuario && response.data.usuario.nombre) {
           setUsuario(response.data.usuario);
         } else {
@@ -31,13 +33,16 @@ function DashboardA() {
     <div style={{ display: "flex" }}>
       <Sidebar />
       <div style={{ marginLeft: "250px", padding: "20px", width: "100%" }}>
-        <h1>Bienvenido al Dashboard {usuario?.nombre}</h1>
-         {/* Botón de Bootstrap */}
+        <h1>
+          Bienvenido al Dashboard {usuario?.nombre}{" "}
+          {usuario?.rol && <span>({usuario.rol})</span>}
+        </h1>
+        {/* Botón de Bootstrap para salir */}
         <button 
           className="btn btn-primary mt-3"
           onClick={() => navigate("/Dashboard")}
         >
-        salir
+          Salir
         </button>
       </div>
     </div>

@@ -127,7 +127,28 @@ function Usuarios() {
       <ToastContainer />
 
       <h1>Usuarios</h1>
-      <table className="table table-striped">
+      <h2>{nuevoUsuario.id_usuario ? 'Editar Usuario' : 'Agregar Nuevo Usuario'}</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label>Nombre</label>
+          <input type="text" className="form-control" name="nombre" value={nuevoUsuario.nombre} onChange={handleChange} />
+        </div>
+        <div className="mb-3">
+          <label>Apellido</label>
+          <input type="text" className="form-control" name="apellido" value={nuevoUsuario.apellido} onChange={handleChange} />
+        </div>
+        <div className="mb-3">
+          <label>Correo</label>
+          <input type="email" className="form-control" name="correo" value={nuevoUsuario.correo} onChange={handleChange} />
+        </div>
+        <div className="mb-3">
+          <label>Contraseña</label>
+          <input type="password" className="form-control" name="contraseña" value={nuevoUsuario.contraseña} onChange={handleChange} />
+        </div>
+        <button type="submit" className="btn btn-primary">
+          {nuevoUsuario.id_usuario ? 'Actualizar' : 'Agregar'}
+        </button>
+        <table className="table table-striped">
         <thead>
           <tr>
             <th>ID</th>
@@ -152,28 +173,6 @@ function Usuarios() {
           ))}
         </tbody>
       </table>
-
-      <h2>{nuevoUsuario.id_usuario ? 'Editar Usuario' : 'Agregar Nuevo Usuario'}</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label>Nombre</label>
-          <input type="text" className="form-control" name="nombre" value={nuevoUsuario.nombre} onChange={handleChange} />
-        </div>
-        <div className="mb-3">
-          <label>Apellido</label>
-          <input type="text" className="form-control" name="apellido" value={nuevoUsuario.apellido} onChange={handleChange} />
-        </div>
-        <div className="mb-3">
-          <label>Correo</label>
-          <input type="email" className="form-control" name="correo" value={nuevoUsuario.correo} onChange={handleChange} />
-        </div>
-        <div className="mb-3">
-          <label>Contraseña</label>
-          <input type="password" className="form-control" name="contraseña" value={nuevoUsuario.contraseña} onChange={handleChange} />
-        </div>
-        <button type="submit" className="btn btn-primary">
-          {nuevoUsuario.id_usuario ? 'Actualizar' : 'Agregar'}
-        </button>
       </form>
     </div>
   );
