@@ -7,6 +7,10 @@ import Usuarios from "./components/Usuarios"
 import Login from "./components/Login"
 import Sidebar from "./components/Sidebar"
 import DashboardA from "./components/Dashboard(admin)"
+import Salas from "./components/Salas"
+import Asientos from "./components/Asientos"
+import SalaUsuario from "./components/SalaUsuario"
+
 
 function Router(){
     return(
@@ -20,6 +24,10 @@ function Router(){
                 <Route path="/Admin" element={<Admin/>}></Route>
                 <Route path="/Usuarios" element={<Usuarios/>}></Route>
                 <Route path="/Sidebar" element={<Sidebar/>}></Route>
+                <Route path="/Salas" element={<Salas/>}></Route>
+                <Route path="/Asientos" element={<Asientos/>}></Route>
+                <Route path="/SalaUsuario" element={<SalaUsuario/>}></Route>
+                
             </Routes>
         </BrowserRouter>
     ) 
