@@ -18,7 +18,7 @@ function Sidebar() {
         <li><Link to="/promociones">Promociones</Link></li>
         <li><Link to="/reservas">Reservas</Link></li>
         <li><Link to="/salas">Salas</Link></li>
-       
+        <li><Link to="/salausuario">SalaUsuarioS</Link></li>
         
       </ul>
     </div>

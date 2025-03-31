@@ -3,7 +3,7 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";// Sidebar is not used
-
+//HOLA
 interface Sala {
   id_sala: number;
   id_tipo_sala: number;

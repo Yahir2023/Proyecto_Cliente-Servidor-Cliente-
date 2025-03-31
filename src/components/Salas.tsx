@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "./Sidebar";
-
+//HOLA
 // Definir la estructura de datos de una sala y tipo de sala
 interface Sala {
   id_sala: number;
