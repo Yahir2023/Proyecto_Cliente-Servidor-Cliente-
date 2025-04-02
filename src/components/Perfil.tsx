@@ -21,20 +21,27 @@ interface Reserva {
   estado: string;
 }
 
-interface Boleto {
-  id: number;
-  detalle: string;
+interface Pago {
+  id_pago: number;
+  estado_pago: string;
+  monto_pagado: number;
+  metodo_pago: string;
 }
 
-interface Pago {
-  id: number;
-  monto: number;
+interface Boleto {
+  id_boleto: number;
+  tipo_boleto: string;
+  precio_unitario: number;
+  estado: string;
 }
 
 interface Promocion {
-  id: number;
-  titulo: string;
+  id_promocion: number;
   descripcion: string;
+  tipo_descuento: string;
+  valor_descuento: number;
+  fecha_inicio: string;
+  fecha_fin: string;
 }
 
 const Perfil = () => {
@@ -42,9 +49,9 @@ const Perfil = () => {
   const [perfil, setPerfil] = useState<Usuario | null>(null);
   const [compras, setCompras] = useState<Compra[]>([]);
   const [reservas, setReservas] = useState<Reserva[]>([]);
-  const [boletos, setBoletos] = useState<Boleto[]>([]);
   const [pagos, setPagos] = useState<Pago[]>([]);
-  const [promociones, setPromociones] = useState<Promocion[]>([]);
+  const [boletos, setBoletos] = useState<Boleto[]>([]);
+  const [promociones, setPromociones] = useState<Promocion[]>([]); // Nuevo estado para las promociones
 
   const token = localStorage.getItem("token");
 
@@ -67,40 +74,31 @@ const Perfil = () => {
         const usuarioId = usuario.id;
 
         Promise.all([
-          axios.get("http://localhost:3000/compras", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
           axios.get(`http://localhost:3000/reservas/${usuarioId}`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get("http://localhost:3000/boletos", {
+          axios.get("http://localhost:3000/compras", {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get("http://localhost:3000/pagos", {
+          axios.get(`http://localhost:3000/usuarios/${usuarioId}/pagos`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          axios.get("http://localhost:3000/promociones", {
+          axios.get(`http://localhost:3000/boletos/usuario/${usuarioId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get(`http://localhost:3000/promociones/usuario/${usuarioId}`, { 
             headers: { Authorization: `Bearer ${token}` },
           }),
         ])
-          .then(
-            ([
-              comprasRes,
-              reservasRes,
-              boletosRes,
-              pagosRes,
-              promocionesRes,
-            ]) => {
-              setCompras(comprasRes.data);
-              setReservas(reservasRes.data);
-              setBoletos(boletosRes.data);
-              setPagos(pagosRes.data);
-              setPromociones(promocionesRes.data);
-              toast.success("Datos de perfil cargados correctamente");
-            }
-          )
+          .then(([reservasRes, comprasRes, pagosRes, boletosRes, promocionesRes]) => {
+            setReservas(reservasRes.data);
+            setCompras(comprasRes.data);
+            setPagos(pagosRes.data);
+            setBoletos(boletosRes.data);
+            setPromociones(promocionesRes.data);
+          })
           .catch(() => {
-            toast.error("Error al cargar datos adicionales del perfil.");
+            toast.error("Error al cargar reservas, compras, pagos, boletos o promociones.");
           });
       })
       .catch(() => {
@@ -121,10 +119,8 @@ const Perfil = () => {
     <div className="container mt-4">
       <ToastContainer />
       <h2 className="mb-4">Perfil de {perfil.nombre}</h2>
-
       <div className="row">
-        {/* Tarjeta de Perfil */}
-        <div className="col-md-4 mb-4">
+        <div className="col-md-3 mb-4">
           <div className="card h-100">
             <div className="card-header">
               <h3>Perfil</h3>
@@ -137,8 +133,8 @@ const Perfil = () => {
           </div>
         </div>
 
-        {/* Tarjeta de Historial de Compras */}
-        <div className="col-md-4 mb-4">
+        {/* Sección de Compras */}
+        <div className="col-md-3 mb-4">
           <div className="card h-100">
             <div className="card-header">
               <h3>Compras</h3>
@@ -159,8 +155,8 @@ const Perfil = () => {
           </div>
         </div>
 
-        {/* Tarjeta de Historial de Reservas */}
-        <div className="col-md-4 mb-4">
+        {/* Sección de Reservas */}
+        <div className="col-md-3 mb-4">
           <div className="card h-100">
             <div className="card-header">
               <h3>Reservas</h3>
@@ -181,30 +177,8 @@ const Perfil = () => {
           </div>
         </div>
 
-        {/* Tarjeta de Boletos Comprados */}
-        <div className="col-md-4 mb-4">
-          <div className="card h-100">
-            <div className="card-header">
-              <h3>Boletos</h3>
-            </div>
-            <div className="card-body">
-              {boletos.length > 0 ? (
-                <ul className="list-group">
-                  {boletos.map((boleto) => (
-                    <li className="list-group-item" key={boleto.id}>
-                      {boleto.detalle}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No hay boletos comprados.</p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Tarjeta de Historial de Pagos */}
-        <div className="col-md-4 mb-4">
+        {/* Sección de Pagos */}
+        <div className="col-md-3 mb-4">
           <div className="card h-100">
             <div className="card-header">
               <h3>Pagos</h3>
@@ -213,8 +187,8 @@ const Perfil = () => {
               {pagos.length > 0 ? (
                 <ul className="list-group">
                   {pagos.map((pago) => (
-                    <li className="list-group-item" key={pago.id}>
-                      Pago #{pago.id} - ${pago.monto}
+                    <li className="list-group-item" key={pago.id_pago}>
+                      Pago #{pago.id_pago} - {pago.estado_pago} - ${pago.monto_pagado} ({pago.metodo_pago})
                     </li>
                   ))}
                 </ul>
@@ -225,34 +199,56 @@ const Perfil = () => {
           </div>
         </div>
 
-        {/* Tarjeta de Promociones */}
-        <div className="col-md-4 mb-4">
+        {/* Sección de Boletos */}
+        <div className="col-md-3 mb-4">
           <div className="card h-100">
             <div className="card-header">
-              <h3>Promociones</h3>
+              <h3>Historial de Boletos</h3>
             </div>
             <div className="card-body">
-              {promociones.length > 0 ? (
+              {boletos.length > 0 ? (
                 <ul className="list-group">
-                  {promociones.map((promo) => (
-                    <li className="list-group-item" key={promo.id}>
-                      {promo.titulo} - {promo.descripcion}
+                  {boletos.map((boleto) => (
+                    <li className="list-group-item" key={boleto.id_boleto}>
+                      Boleto #{boleto.id_boleto} - {boleto.tipo_boleto} - ${boleto.precio_unitario} - {boleto.estado}
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p>No hay promociones disponibles.</p>
+                <p>No hay boletos registrados.</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Sección de Promociones */}
+        <div className="col-md-3 mb-4">
+          <div className="card h-100">
+            <div className="card-header">
+              <h3>Historial de Promociones</h3>
+            </div>
+            <div className="card-body">
+              {promociones.length > 0 ? (
+                <ul className="list-group">
+                  {promociones.map((promocion) => (
+                    <li className="list-group-item" key={promocion.id_promocion}>
+                      {promocion.descripcion} - {promocion.tipo_descuento} - {promocion.valor_descuento}% - {promocion.fecha_inicio} hasta {promocion.fecha_fin}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No hay promociones registradas.</p>
               )}
             </div>
           </div>
         </div>
       </div>
+
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <button className="btn btn-primary" onClick={() => navigate("/")}>
-          Volver al Dashboard
-        </button>
-      </div>
+      <button className="btn btn-primary" onClick={() => navigate("/")}>Volver a inicio</button>
     </div>
+    </div>
+
     
   );
 };

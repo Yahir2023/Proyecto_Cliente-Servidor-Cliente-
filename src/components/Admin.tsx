@@ -52,7 +52,7 @@ function Administradores() {
       })
       .then(response => setAdministradores(response.data))
       .catch(error => {
-        console.error('Error al obtener administradores:', error);
+        console.error('Error al obtener administradores:', error.response?.data || error);
         toast.error("Error al obtener administradores");
       });
   };
@@ -72,6 +72,9 @@ function Administradores() {
     const existeAdmin = administradores.find(a => a.id_admin === adminAInsertar.id_admin);
 
     if (existeAdmin) {
+      if (!window.confirm("¿Estás seguro que deseas editar este administrador?")) {
+        return;
+      }
       axios
         .put(`http://localhost:3000/admin/${adminAInsertar.id_admin}`, adminAInsertar, {
           headers: { Authorization: token },
@@ -102,6 +105,11 @@ function Administradores() {
   };
 
   const handleEdit = (admin: Administrador) => {
+    if (!window.confirm("¿Estás seguro que deseas editar este administrador?")) {
+      return;
+    }
+    // Desplaza la vista hasta el formulario para editar
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setNuevoAdmin({
       id_admin: admin.id_admin.toString(),
       nombre: admin.nombre,
@@ -113,6 +121,9 @@ function Administradores() {
   };
 
   const handleDelete = (id: number) => {
+    if (!window.confirm("¿Estás seguro que deseas eliminar este administrador?")) {
+      return;
+    }
     axios
       .delete(`http://localhost:3000/admin/${id}`, {
         headers: { Authorization: token },
@@ -130,10 +141,8 @@ function Administradores() {
   return (
     <div className="main-content d-flex">
       <Sidebar />
-      {/* Contenido principal */}
       <div className="container mt-4 flex-grow-1">
-        <ToastContainer /> {/* Asegura que las notificaciones se muestren */}
-
+        <ToastContainer /> 
         <h1>Administradores</h1>
         <h2>{nuevoAdmin.id_admin ? 'Editar Administrador' : 'Agregar Nuevo Administrador'}</h2>
         <form onSubmit={handleSubmit}>
@@ -172,7 +181,7 @@ function Administradores() {
           </button>
         </form>
 
-        <table className="table table-striped">
+        <table className="table table-striped mt-4">
           <thead>
             <tr>
               <th>ID</th>

@@ -17,7 +17,6 @@ function DashboardA() {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
-        // Se comprueba que exista el usuario y que contenga el campo nombre y rol
         if (response.data.usuario && response.data.usuario.nombre) {
           setUsuario(response.data.usuario);
         } else {

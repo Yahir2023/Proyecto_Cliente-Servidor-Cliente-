@@ -88,7 +88,8 @@ const AdminPeliculas: React.FC = () => {
     if (imageFile) {
       rutaImagen = await uploadImage();
     }
-    const payload = { ...formData, rutaImagen };
+    // Corrige el payload para que la clave sea "ruta_imagen"
+    const payload = { ...formData, ruta_imagen: rutaImagen };
     try {
       if (editing && current) {
         await axios.put(`http://localhost:3000/peliculas/${current.id_pelicula}`, payload, {
@@ -146,7 +147,7 @@ const AdminPeliculas: React.FC = () => {
 
   return (
     <div className="main-content mt-5">
-        <Sidebar />
+      <Sidebar />
       <h2 className="mb-4">Administrar Películas</h2>
       <form onSubmit={handleSubmit} className="mb-5">
         <div className="row">

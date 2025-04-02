@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function Login() {
@@ -54,7 +54,6 @@ function Login() {
             />
           </div>
 
-          {/* Contraseña */}
           <div className="mb-3">
             <label className="form-label">Contraseña</label>
             <input
@@ -67,19 +66,22 @@ function Login() {
             />
           </div>
 
-          {/* Botón de Login */}
           <button type="submit" className="btn btn-primary w-100">Ingresar</button>
 
-          {/* Mensaje de error */}
           {error && <div className="alert alert-danger mt-3">{error}</div>}
         </form>
 
-        {/* Sección para crear una cuenta */}
-        <div className="text-center mt-4">
-          <p>¿No tienes cuenta?</p>
-          <Link to="/Registro" className="btn btn-secondary">
-            Crear Cuenta
-          </Link>
+        <div className="text-center mt-3 d-flex justify-content-center align-items-center">
+        <Link to="/Contraseña" className="text-decoration-none">¿Perdiste tu contraseña?</Link>
+        </div>
+
+        <div className="text-center d-flex justify-content-center align-items-center">
+        <p className="mb-0 me-2">¿No tienes cuenta?</p>
+        <Link to="/Registro" className="text-decoration-none">Registrate</Link>
+        </div>
+        
+        <div className="text-center mt-3">
+        <Link to="/" className="text-decoration-none"> Ir a inicio </Link> 
         </div>
       </div>
     </div>

@@ -1,6 +1,34 @@
-import Navbar from "./Navbar"; // Ajusta la ruta si es necesario
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Navbar from './Navbar';
 
-function Dashboard() {
+interface Pelicula {
+  id_pelicula: number;
+  titulo: string;
+  duracion: number;
+  clasificacion: string;
+  sinopsis: string;
+  director: string;
+  genero: string;
+  ruta_imagen: string;
+  created_at: string;
+  updated_at: string;
+}
+
+const Dashboard: React.FC = () => {
+  const [peliculas, setPeliculas] = useState<Pelicula[]>([]);
+
+  // Obtener las películas desde la API pública (GET /peliculas)
+  useEffect(() => {
+    axios.get("http://localhost:3000/peliculas")
+      .then((res) => {
+        setPeliculas(res.data);
+      })
+      .catch((err) => {
+        console.error("Error al cargar películas:", err);
+      });
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -29,101 +57,35 @@ function Dashboard() {
           </div>
         </div>
 
-        {/* Sección de Películas */}
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
-          {/* Tarjeta de Película 1 */}
-          <div className="col">
-            <div className="card h-100">
-              <img
-                src="src/images/Spiderman.webp"
-                className="card-img-top"
-                alt="Implacable"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Implacable</h5>
-                <p className="card-text">
-                  Película de acción con altas dosis de adrenalina.
-                </p>
-              </div>
-              <div className="card-footer text-center">
-                <a href="#" className="btn btn-primary">
-                  Comprar boletos
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Tarjeta de Película 2 */}
-          <div className="col">
-            <div className="card h-100">
-              <img
-                src="src/images/Avengers.jpg"
-                className="card-img-top"
-                alt="Medium"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Medium</h5>
-                <p className="card-text">
-                  Terror y misterio que te mantendrán en suspenso.
-                </p>
-              </div>
-              <div className="card-footer text-center">
-                <a href="#" className="btn btn-primary">
-                  Comprar boletos
-                </a>
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
+          {peliculas.map((pelicula) => (
+            <div className="col" key={pelicula.id_pelicula}>
+              <div className="card h-100">
+                <img
+                  src={`http://localhost:3000${pelicula.ruta_imagen}`}
+                  className="card-img-top"
+                  alt={pelicula.titulo}
+                />
+                <div className="card-body">
+                  <h5 className="card-title">{pelicula.titulo}</h5>
+                  <p className="card-text">
+                    {pelicula.sinopsis.length > 100
+                      ? pelicula.sinopsis.substring(0, 100) + '...'
+                      : pelicula.sinopsis}
+                  </p>
+                </div>
+                <div className="card-footer text-center">
+                  <a href="#" className="btn btn-primary">
+                    Comprar boletos
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
-
-          {/* Tarjeta de Película 3 */}
-          <div className="col">
-            <div className="card h-100">
-              <img
-                src="https://m.media-amazon.com/images/M/MV5BNjIxNzkyZWMtMmM2Ni00MWQ5LTllNzMtMzAzNGU5MjYxMDBmXkEyXkFqcGc@._V1_.jpg"
-                className="card-img-top"
-                alt="La sobreviviente: La caída del vuelo 811"
-              />
-              <div className="card-body">
-                <h5 className="card-title">
-                  La sobreviviente: La caída del vuelo 811
-                </h5>
-                <p className="card-text">
-                  Un drama de supervivencia lleno de emociones.
-                </p>
-              </div>
-              <div className="card-footer text-center">
-                <a href="#" className="btn btn-primary">
-                  Comprar boletos
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Tarjeta de Película 4 */}
-          <div className="col">
-            <div className="card h-100">
-              <img
-                src="https://cultura.nexos.com.mx/wp-content/uploads/2025/02/mv5botrizme4ndctntf.jpg"
-                className="card-img-top"
-                alt="El brutalista"
-              />
-              <div className="card-body">
-                <h5 className="card-title">El brutalista</h5>
-                <p className="card-text">
-                  Drama intenso que explora la oscuridad humana.
-                </p>
-              </div>
-              <div className="card-footer text-center">
-                <a href="#" className="btn btn-primary">
-                  Comprar boletos
-                </a>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </>
   );
-}
+};
 
 export default Dashboard;
